@@ -244,11 +244,11 @@ class FactTrainer(BaseTrainer):
 
         for _b_comp_id, _logit in zip(binary_comp_ids, ac_logit_c):
             _prob = nn.Softmax(dim=-1)(_logit)  # (n_exp, n_comp)
-            T_probs = _prob.T[_b_comp_id].detach().cuda()  # (n_T, n_exp)
+            T_probs = _prob.T[_b_comp_id].detach().cpu()  # (n_T, n_exp)
             cids, eids = expert_assign(T_probs)
             _max_ids = torch.where(_b_comp_id)[0][cids]
             ac_loss_c += F.cross_entropy(_logit[eids], _max_ids)
-            acc = T_probs[cids, eids].sum().cuda() / n_experts
+            acc = T_probs[cids, eids].sum().cpu() / n_experts
             accs += acc
 
         ac_loss_c /= B
