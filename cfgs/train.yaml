@@ -1,4 +1,4 @@
-use_ddp: True   # whether to use DataDistributedParallel, for multi-gpus.
+use_ddp: False   # whether to use DataDistributedParallel, for multi-gpus.
 port:   # the port for the DataDistributedParallel training.
 
 resume:
