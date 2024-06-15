@@ -139,13 +139,13 @@ def train(args, cfg, ddp_gpu=-1):
     gen.apply(weights_init(cfg.init))
 
     d_kwargs = cfg.get("d_args", {})
-    disc = disc_builder(cfg.C, trn_dset.n_fonts, trn_dset.n_chars, **d_kwargs)
+    disc = disc_builder(cfg.C, trn_dset.n_fonts, trn_dset.n_chars, **d_kwargs).cuda()
     disc.cuda()
-    disc.apply(weights_init(cfg.init))
+    disc.apply(weights_init(cfg.init)).cuda()
 
-    aux_clf = aux_clf_builder(gen.feat_shape["last"], trn_dset.n_fonts, n_comps, **cfg.ac_args)
+    aux_clf = aux_clf_builder(gen.feat_shape["last"], trn_dset.n_fonts, n_comps, **cfg.ac_args).cuda()
     aux_clf.cuda()
-    aux_clf.apply(weights_init(cfg.init))
+    aux_clf.apply(weights_init(cfg.init)).cuda()
 
     g_optim = optim.Adam(gen.parameters(), lr=cfg.g_lr, betas=cfg.adam_betas)
     d_optim = optim.Adam(disc.parameters(), lr=cfg.d_lr, betas=cfg.adam_betas)
